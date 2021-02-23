@@ -1,26 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import Navbar from './components/Navbar';
+import People from './components/People';
+import Planets from './components/Planets';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export enum Page {
+    PLANETS = 'planets',
+    PEOPLE = 'people',
+}
+
+const queryClient = new QueryClient()
+
+const App: React.FC = () => {
+    const [page, setPage] = useState<Page>(Page.PLANETS);
+
+    return (
+        <div className="App">
+            <QueryClientProvider client={queryClient}>
+                <h1>Star Wars Info</h1>
+                <Navbar setPage={setPage} />
+                <div className="App__content">
+                    {page === Page.PLANETS ? <Planets /> : <People />}
+                </div>
+                <ReactQueryDevtools initialIsOpen={false} />
+            </QueryClientProvider>
+        </div>
+    );
 }
 
 export default App;
